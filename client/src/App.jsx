@@ -43,7 +43,7 @@ export default function App() {
     e.preventDefault()
     setParticipants([])
 
-    await axios.post("http://localhost:5000/createEvent", {name: name.current.value, date: date.current.value})
+    await axios.post("http://localhost:5000/createEvent", {name: name.current.value, date: date.current.value, participants})
   
     const response = await axios.get("http://localhost:5000/fetchEvents")
     setEvents(response.data)
@@ -53,9 +53,8 @@ export default function App() {
     setSelectedEvent(id)
   }
 
-  async function updateEvent(event, target) {
+  async function updateEvent(target) {
       event.preventDefault()
-
       await axios.patch("http://localhost:5000/updateEvent", {event: target})
       setEvents(prev => prev.map(e => e._id === target._id ? target : e))
       setSelectedEvent(false)
@@ -69,7 +68,7 @@ export default function App() {
   function removeParticipant(name) {
     setParticipants(prev => prev.filter(e => e !== name))
   }
-
+  
   return (
     <div className="h-screen bg-gray-200">
         <div className="border-b px-5 py-2.5 mb-2.5">
@@ -108,7 +107,7 @@ export default function App() {
           Renginiai
         </div>
         <div className="grid grid-cols-5 px-5 pb-2.5 gap-8">
-          {events.map(element => <EventCard key={element._id} id={element._id} name={element.name} date={element.date} onConfigure={id => configureEvent(id)} flipPriority={flipPriority} priority={element.priority} />)}
+          {events.map(element => <EventCard key={element._id} target={element} onConfigure={id => configureEvent(id)} flipPriority={flipPriority} priority={element.priority} />)}
         </div>
 
         {selectedEvent ?

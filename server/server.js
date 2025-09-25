@@ -9,13 +9,14 @@ app.use(express.json())
 const db_eventSchema = new mongoose.Schema({
     name: {type: String, required: true},
     date: {type: String, required: true},
-    priority: {type: Boolean, default: false}
+    priority: {type: Boolean, default: false},
+    participants: {type: Array, default: []}
 })
 
 const db_eventModel = mongoose.model("Event", db_eventSchema)
 
 app.post("/createEvent", async (req, res) => {
-    const newEvent = new db_eventModel({name: req.body.name, date: req.body.date})
+    const newEvent = new db_eventModel({name: req.body.name, date: req.body.date, participants: req.body.participants})
     await newEvent.save()
 
     console.log("hell yeah");
@@ -34,7 +35,7 @@ app.get("/fetchEvents", async (req, res) => {
 app.patch("/updateEvent", async (req, res) => {
     console.log(req.body.event.date);
     
-    await db_eventModel.findByIdAndUpdate(req.body.event._id, {name: req.body.event.name, date: req.body.event.date})
+    await db_eventModel.findByIdAndUpdate(req.body.event._id, {name: req.body.event.name, date: req.body.event.date, participants: req.body.event.participants})
     res.json()
 })
 
