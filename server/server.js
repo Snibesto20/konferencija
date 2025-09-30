@@ -16,7 +16,7 @@ const db_eventSchema = new mongoose.Schema({
 const db_eventModel = mongoose.model("Event", db_eventSchema)
 
 app.post("/createEvent", async (req, res) => {
-    const newEvent = new db_eventModel({name: req.body.name, date: req.body.date, participants: req.body.participants})
+    const newEvent = new db_eventModel(req.body.newEvent)
     await newEvent.save()
 
     console.log("hell yeah");
@@ -24,19 +24,27 @@ app.post("/createEvent", async (req, res) => {
 })
 
 app.get("/fetchEvent", async (req, res) => {
-    const foundEvent = await db_eventModel.findOne({_id: req.query.id})
-    res.json(foundEvent)
+    try {
+        const foundEvent = await db_eventModel.findOne({_id: req.query.id}).lean()
+        return res.status(200).json(foundEvent)
+    } catch (err) {
+        return res.sendStatus(500)
+    }
 })
 
 app.get("/fetchEvents", async (req, res) => {   
-    return res.json(await db_eventModel.find().lean())
+    try {
+        return res.json(await db_eventModel.find().lean())
+    } catch (err) {
+        return res.sendStatus(500)
+    }
 })
 
 app.patch("/updateEvent", async (req, res) => {
     console.log(req.body.event.date);
     
-    await db_eventModel.findByIdAndUpdate(req.body.event._id, {name: req.body.event.name, date: req.body.event.date, participants: req.body.event.participants})
-    res.json()
+    await db_eventModel.updateOne({_id: req.body.event._id}, {name: req.body.event.name, date: req.body.event.date, participants: req.body.event.participants})
+    res.send
 })
 
 app.patch("/flipPriority", async (req, res) => {
@@ -44,6 +52,11 @@ app.patch("/flipPriority", async (req, res) => {
     updatedEvent.priority = !updatedEvent.priority
     await updatedEvent.save()
 
+    res.json()
+})
+
+app.delete("/deleteEvent", async (req, res) => {
+    await db_eventModel.deleteOne({_id: req.body.id})
     res.json()
 })
 
