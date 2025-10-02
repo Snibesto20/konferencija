@@ -1,10 +1,11 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import {FaPlus } from "react-icons/fa"
+import { FaAlignLeft, FaFile, FaMapMarkerAlt, FaPlus, FaStickyNote } from "react-icons/fa"
 
 import EventCard from "../components/EventCard"
 import EventSettings from "../components/EventSettings"
 import EventCreate from "../components/EventCreate"
+import PluginCard from "../components/PluginCard"
 
 export default function Panel() {
   const [createEventOn, setCreateEventOn] = useState(false)
@@ -41,6 +42,7 @@ export default function Panel() {
   
     const response = await axios.get("http://localhost:5000/fetchEvents")
     setEvents(response.data)
+    setCreateEventOn(false)
   }
 
   function configureEvent(id) {
@@ -53,7 +55,6 @@ export default function Panel() {
       await axios.patch("http://localhost:5000/updateEvent", {event: target})
       setEvents(prev => prev.map(el => el._id === target._id ? target : el))
       setSelectedEvent(false)
-      setSettingsOn(false)
   }
 
   async function flipPriority(id) {
@@ -75,8 +76,6 @@ export default function Panel() {
             <span className="font-bold">Pridėti naują</span>
             <FaPlus />
           </button>
-
-          {createEventOn ? <EventCreate onCreateEvent={createEvent} onClose={() => setCreateEventOn(false)} /> : null}
         </div>
         
         <div className="px-5 font-bold text-2xl mb-2.5">
@@ -92,6 +91,20 @@ export default function Panel() {
           <EventSettings onClose={() => setSettingsOn(false)} target={selectedEvent} onUpdate={updateEvent} onDelete={deleteEvent} />
         </div>
         : null}
+
+        {createEventOn ?
+        <div className="absolute top-0 w-full flex justify-center items-center h-screen">
+          <div className={`absolute top-0 h-screen bg-black opacity-80 w-full`}></div>
+          {createEventOn ? <EventCreate onCreateEvent={createEvent} onClose={() => setCreateEventOn(false)} /> : null}
+        </div>
+        : null}
+
+        <div className="grid grid-cols-4 gap-12">
+          <PluginCard mainColor={"#ef4444"} secondaryColor={"#f87171"} cover="/backgrounds/red-diagonal-stripes.svg" icon={FaMapMarkerAlt} title="Lokacija" description="Pridėti lokacijos informaciją prie renginio." />
+          <PluginCard mainColor={"#075985"} secondaryColor={"#0284c7"} cover="/backgrounds/blue-squares.svg" icon={FaAlignLeft} title="Aprašymas" description="Pridėti renginiui aprašymą." />
+          <PluginCard mainColor={"red-500"} secondaryColor={"red-400"} cover="/backgrounds/red-diagonal-stripes.svg" icon={FaMapMarkerAlt} title="Lokacija" description="Pridėti lokacijos informaciją prie renginio." />
+          <PluginCard mainColor={"red-500"} secondaryColor={"red-400"} cover="/backgrounds/red-diagonal-stripes.svg" icon={FaMapMarkerAlt} title="Lokacija" description="Pridėti lokacijos informaciją prie renginio." />
+        </div>
     </div>
   )
 }
