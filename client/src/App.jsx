@@ -9,6 +9,7 @@ export default function App() {
       <Routes>
         <Route path="/panel" element={<Panel />} />
         <Route path="/start/:id" element={<Start />} />
+        <Route path="/" element={<Panel />} />
       </Routes>
     </BrowserRouter>
   )

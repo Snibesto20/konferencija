@@ -1,17 +1,15 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { FaAlignLeft, FaFile, FaMapMarkerAlt, FaPlus, FaStickyNote } from "react-icons/fa"
+import { FaPlus } from "react-icons/fa"
 
 import EventCard from "../components/EventCard"
 import EventSettings from "../components/EventSettings"
 import EventCreate from "../components/EventCreate"
-import PluginCard from "../components/PluginCard"
 
 export default function Panel() {
   const [createEventOn, setCreateEventOn] = useState(false)
   const [events, setEvents] = useState([])
   const [selectedEvent, setSelectedEvent] = useState(false)
-  const [settingsOn, setSettingsOn] = useState(false)
 
   function sortEvents(sortable) {
     let priority = []
@@ -41,13 +39,14 @@ export default function Panel() {
     await axios.post("http://localhost:5000/createEvent", {newEvent})
   
     const response = await axios.get("http://localhost:5000/fetchEvents")
+    console.log(response.data);
+    
     setEvents(response.data)
     setCreateEventOn(false)
   }
 
-  function configureEvent(id) {
-    setSelectedEvent(id)
-    setSettingsOn(true)
+  function configureEvent(el) {
+    setSelectedEvent(el)
   }
 
   async function updateEvent(ev, target) {
@@ -65,7 +64,6 @@ export default function Panel() {
   async function deleteEvent(id) {
     await axios.delete("http://localhost:5000/deleteEvent", {data: {id}})
     setEvents(prev => prev.filter(el => el._id !== id))
-    setSettingsOn(false)
     setSelectedEvent(false)
   }
   
@@ -82,13 +80,13 @@ export default function Panel() {
           Renginiai
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 px-5 pb-2.5 gap-8">
-          {events.map(element => <EventCard key={element._id} target={element} onConfigure={id => configureEvent(id)} flipPriority={flipPriority} priority={element.priority} />)}
+          {events.map(el => <EventCard key={el._id} target={el} onConfigure={id => configureEvent(id)} flipPriority={flipPriority} priority={el.priority} />)}
         </div>
 
-        {settingsOn ?
+        {selectedEvent ?
         <div className="absolute top-0 w-full flex justify-center items-center h-screen">
           <div className={`absolute top-0 h-screen bg-black opacity-80 w-full`}></div>
-          <EventSettings onClose={() => setSettingsOn(false)} target={selectedEvent} onUpdate={updateEvent} onDelete={deleteEvent} />
+          <EventSettings onClose={() => setSelectedEvent(false)} target={selectedEvent} onUpdate={updateEvent} onDelete={deleteEvent} />
         </div>
         : null}
 
@@ -98,13 +96,6 @@ export default function Panel() {
           {createEventOn ? <EventCreate onCreateEvent={createEvent} onClose={() => setCreateEventOn(false)} /> : null}
         </div>
         : null}
-
-        <div className="grid grid-cols-4 gap-12">
-          <PluginCard mainColor={"#ef4444"} secondaryColor={"#f87171"} cover="/backgrounds/red-diagonal-stripes.svg" icon={FaMapMarkerAlt} title="Lokacija" description="Pridėti lokacijos informaciją prie renginio." />
-          <PluginCard mainColor={"#075985"} secondaryColor={"#0284c7"} cover="/backgrounds/blue-squares.svg" icon={FaAlignLeft} title="Aprašymas" description="Pridėti renginiui aprašymą." />
-          <PluginCard mainColor={"red-500"} secondaryColor={"red-400"} cover="/backgrounds/red-diagonal-stripes.svg" icon={FaMapMarkerAlt} title="Lokacija" description="Pridėti lokacijos informaciją prie renginio." />
-          <PluginCard mainColor={"red-500"} secondaryColor={"red-400"} cover="/backgrounds/red-diagonal-stripes.svg" icon={FaMapMarkerAlt} title="Lokacija" description="Pridėti lokacijos informaciją prie renginio." />
-        </div>
     </div>
   )
 }

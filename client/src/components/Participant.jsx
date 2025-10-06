@@ -1,6 +1,6 @@
 import { FaTimes } from "react-icons/fa";
 
-export default function EventParticipant(p) {
+export default function Participant(p) {
     return (
         <div className="relative flex bg-gradient-to-b from-gray-300 to-gray-400 pl-2 gap-2 border h-6">
             {p.name}

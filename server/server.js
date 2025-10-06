@@ -9,18 +9,16 @@ app.use(express.json())
 const db_eventSchema = new mongoose.Schema({
     name: {type: String, required: true},
     date: {type: String, required: true},
-    priority: {type: Boolean, default: false},
-    participants: {type: Array, default: []}
+    plugins: {type: Object, default: {}, minimize: false},
+    priority: {type: Boolean, default: false}
 })
 
 const db_eventModel = mongoose.model("Event", db_eventSchema)
 
 app.post("/createEvent", async (req, res) => {
-    const newEvent = new db_eventModel(req.body.newEvent)
+    const newEvent = new db_eventModel({...req.body.newEvent, plugins: Object.keys(req.body.newEvent.plugins).length !== 0 ? req.body.newEvent.plugins : {"_": ""}})
     await newEvent.save()
-
-    console.log("hell yeah");
-    res.json()
+    res.json(newEvent)
 })
 
 app.get("/fetchEvent", async (req, res) => {
@@ -44,7 +42,7 @@ app.patch("/updateEvent", async (req, res) => {
     console.log(req.body.event.date);
     
     await db_eventModel.updateOne({_id: req.body.event._id}, {name: req.body.event.name, date: req.body.event.date, participants: req.body.event.participants})
-    res.send
+    res.sendStatus(200)
 })
 
 app.patch("/flipPriority", async (req, res) => {
