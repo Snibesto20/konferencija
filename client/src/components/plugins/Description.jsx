@@ -19,7 +19,7 @@ export default function Description({ visible, onRemove, onUpdate, initial }) {
             </div>
             <span className="font-semibold text-sky-800">Aprašymas</span>
         </div>
-        <div className="w-8 h-8 border bg-gradient-to-b from-red-400 to-red-600 p-1.5 cursor-pointer" onClick={() => onRemove(1)}>
+        <div className="w-8 h-8 border bg-gradient-to-b from-sky-600 to-sky-800 p-1.5 cursor-pointer" onClick={() => onRemove(1)}>
             <FaTimes className="w-full h-full text-white" />
         </div>
       </div>
