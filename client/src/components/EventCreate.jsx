@@ -1,9 +1,10 @@
 import { useState } from "react"
-import { FaTimes, FaPlus, FaList, FaAlignLeft, FaMapMarkerAlt, FaUserFriends } from "react-icons/fa"
+import { FaTimes, FaPlus, FaList, FaAlignLeft, FaMapMarkerAlt, FaUserFriends, FaEnvelope } from "react-icons/fa"
 import PluginCard from "../components/PluginCard"
 import Description from "./plugins/Description"
 import NameParticipants from "./plugins/NameParticipants"
 import ProfileParticipants from "./plugins/ProfileParticipants"
+import Location from "./plugins/Location"
 
 export default function EventCreate({ onClose, onCreateEvent }) {
   const [newEvent, setNewEvent] = useState({ name: "", date: "", participants: [], plugins: {} })
@@ -46,19 +47,21 @@ export default function EventCreate({ onClose, onCreateEvent }) {
 
         <Description visible={newEvent.plugins[1] !== undefined} onUpdate={updatePlugin} onRemove={removePlugin} initial="" />
         <NameParticipants visible={newEvent.plugins[2] !== undefined} onUpdate={updatePlugin} onRemove={removePlugin} initial="" />
+        <Location visible={newEvent.plugins[3] !== undefined} onUpdate={updatePlugin} onRemove={removePlugin} initial="" />
         <ProfileParticipants visible={newEvent.plugins[4] !== undefined} onUpdate={updatePlugin} onRemove={removePlugin} initial="" />
 
         <div>
           <span className="font-semibold">Renginio įskiepiai</span>
           <div className="grid grid-cols-2 gap-4 overflow-y-scroll h-36 mt-1">
             <PluginCard id={1} onAdd={addPlugin} mainColor={"#075985"} Icon={FaAlignLeft} secondaryColor={"#0284c7"} title="Aprašymas" description="Renginio aprašymas." selected={newEvent.plugins[1] !== undefined} cover={"iBlueTiles"} />
-            <PluginCard id={2} onAdd={addPlugin} mainColor={"#ef4444"} Icon={FaList} secondaryColor={"#f87171"} title="Vardinis dalyvių sąrašas" description="Dalyvių sąrašas su vardu." selected={newEvent.plugins[2] !== undefined} cover={"iRedDeathStar"} />
-            <PluginCard id={3} onAdd={addPlugin} mainColor={"#075985"} Icon={FaMapMarkerAlt} secondaryColor={"#0284c7"} title="Aprašymas" description="Renginio aprašymas papildantis informaciją." selected={newEvent.plugins[3] !== undefined} cover={"iTopography"} />
-            <PluginCard id={4} onAdd={addPlugin} mainColor={"#382211"} Icon={FaUserFriends} secondaryColor={"#6e533f"} title="Profilinis dalyvių sąrašas" description="Dalyvių sąrašas su vardu, pavarde, e-paštu." selected={newEvent.plugins[4] !== undefined} cover={"iBrownLeaves"} />
+            <PluginCard id={2} onAdd={addPlugin} mainColor={"#ef4444"} Icon={FaList} secondaryColor={"#f87171"} title="Vardinis dalyvių sąrašas" description="Dalyvių sąrašas su vardu." selected={newEvent.plugins[2] !== undefined || newEvent.plugins[4] != undefined} cover={"iRedDeathStar"} />
+            <PluginCard id={3} onAdd={addPlugin} mainColor={"#166534"} Icon={FaMapMarkerAlt} secondaryColor={"#4ade80"} title="Lokacija" description="Renginio lokacija gyvam renginiui." selected={newEvent.plugins[3] !== undefined} cover={"iGreenGrass"} />
+            <PluginCard id={4} onAdd={addPlugin} mainColor={"#382211"} Icon={FaUserFriends} secondaryColor={"#6e533f"} title="Profilinis dalyvių sąrašas" description="Dalyvių sąrašas su vardu, pavarde, e-paštu." selected={newEvent.plugins[2] !== undefined || newEvent.plugins[4] != undefined} cover={"iBrownLeaves"} />
+            {/* <PluginCard id={5} onAdd={addPlugin} mainColor={"#ea580c"} Icon={FaEnvelope} secondaryColor={"#fb923c"} title="Profilinis dalyvių sąrašas" description="Dalyvių sąrašas su vardu, pavarde, e-paštu." selected={newEvent.plugins[2] !== undefined || newEvent.plugins[4] != undefined} cover={"iOrangeDiagonalStripes"} /> */}
           </div>
         </div>
 
-        <button type="submit" className="flex items-center justify-center gap-2 py-2.5 bg-gradient-to-b from-green-400 to-green-600 w-full border cursor-pointer">
+        <button type="submit" className="flex items-center justify-center gap-2 py-2.5 bg-gradient-to-b from-green-400 to-green-600 w-full border border-black cursor-pointer text-white">
           <span className="font-bold">Pridėti naują</span>
           <FaPlus />
         </button>

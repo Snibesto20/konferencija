@@ -7,8 +7,6 @@ export default function ProfileParticipants({ visible, onRemove, onUpdate, initi
     const name = useRef("")
     const surname = useRef("")
     const email = useRef("")
-
-    console.log(value);
     
     function addParticipant() {
         const newValue = [...value, {name: name.current.value, surname: surname.current.value, email: email.current.value}]
